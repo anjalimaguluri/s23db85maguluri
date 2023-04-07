@@ -1,0 +1,18 @@
+extends layout
+
+block content
+  h1= title
+  - let employees=[{employee_Name:"Yashwnth",employee_age:"22",employee_salary:"1000"},{employee_Name:"Anjali",employee_age:"21",employee_salary:"2000"},{employee_Name:"Gayathri",employee_age:"22",employee_salary:"3000"}]
+    div(class="container-fluid mt-3")
+    div(class="row")
+        each employee,index in employees
+            div(class="col-sm-2 bg-danger m-1 p-3" onclick=`buy(${index})` ) #{employee.employee_Name} - #{employee.employee_age} - #{employee.employee_salary}
+
+
+
+    script. 
+
+      function buy(itemNo)
+      {
+        alert(`You purchased Item ${itemNo+1}`)
+      }
