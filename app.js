@@ -2,13 +2,35 @@ var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
+var mongoose = require('mongoose')
+var mongodb = require('mongodb')
 var logger = require('morgan');
+var employee = require("./models/employee");
+
+
+require('dotenv').config();
+const connectionString = 
+process.env.MONGO_CON
+mongoose = require('mongoose');
+mongoose.connect(connectionString,
+{
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+});
+
+//Get the default connection
+var db = mongoose.connection;
+//Bind connection to error event
+db.on('error', console.error.bind(console, 'MongoDB connectionerror:'));
+db.once("open", function(){
+console.log("Connection to DB succeeded")});
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var employeeRouter = require('./routes/employee');
 var boardRouter = require('./routes/board');
 var selectorRouter = require('./routes/selector');
+var resourceRouter = require('./routes/resource');
 
 var app = express();
 
@@ -27,9 +49,48 @@ app.use('/users', usersRouter);
 app.use('/employee', employeeRouter);
 app.use('/board', boardRouter);
 app.use('/selector', selectorRouter);
+app.use('/resource', resourceRouter);
 
 
-// catch 404 and forward to error handler
+// We can seed the collection if needed on server start
+async function recreateDB(){
+ // Delete everything
+ await employee.deleteMany();
+ let instance1 = new
+ employee({employee_Name:"Minitha Sai Penumachha",
+  employee_age:24,
+ employee_salary:'2000'});
+ instance1.save().then(()=>{
+  console.log("First object saved")
+}).catch((err)=>{
+  console.log(err);
+})
+let instance2 = new
+  employee({
+    employee_Name: "Anjali",
+    employee_age: 20,
+    employee_salary: 2000
+  });
+  instance2.save().then(()=>{
+    console.log("Second object saved")
+  }).catch((err)=>{
+    console.log(err);
+  })
+
+  let instance3 = new
+  employee({
+    employee_Name: "Gayathri",
+    employee_age: 25,
+    employee_salary: 5000
+  });
+  instance3.save().then(()=>{
+    console.log("Third object saved")
+  }).catch((err)=>{
+    console.log(err);
+  })
+}
+let reseed = true;
+if (reseed) { recreateDB();}
 app.use(function(req, res, next) {
   next(createError(404));
 });
