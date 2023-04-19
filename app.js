@@ -89,7 +89,7 @@ let instance2 = new
     console.log(err);
   })
 }
-let reseed = true;
+let reseed = false;
 if (reseed) { recreateDB();}
 app.use(function(req, res, next) {
   next(createError(404));

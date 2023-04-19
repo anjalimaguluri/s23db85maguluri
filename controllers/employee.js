@@ -14,7 +14,7 @@ exports.employee_list = async function (req, res) {
 exports.employee_detail = async function (req, res) {
     console.log("detail" + req.params.id)
     try {
-        result = await employee.findById(req.params.id)
+        result = await employee.findById(req.query.id)
         res.send(result)
     } catch (error) {
         res.status(500)
